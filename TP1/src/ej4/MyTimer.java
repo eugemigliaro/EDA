@@ -1,5 +1,7 @@
 package ej4;
 
-public class MyTimer {
+import org.joda.time.Period;
 
+public class MyTimer {
+    private Period
 }
