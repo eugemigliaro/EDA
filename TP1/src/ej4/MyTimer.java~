@@ -1,7 +1,0 @@
-package ej4;
-
-import java.time.Duration;
-
-public class MyTimer {
-    private Duration
-}
