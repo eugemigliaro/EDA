@@ -3,7 +3,7 @@ package ej2;
 public class Soundex {
     private static final int MAX_CODE_LENGTH = 4;
     private final char[] IN;
-    private final char[] OUT = {'0', '0', '0', '0'};
+    private char[] OUT = {'0', '0', '0', '0'};
 
     public Soundex(String input) {
         this.IN = clean(input);
@@ -13,6 +13,8 @@ public class Soundex {
     private char[] clean(String input) {
         if(input == null) return new char[0];
         char[] in = input.toUpperCase().toCharArray();
+        /*System.out.println(in);
+        System.out.println("---");*/
         int j = 0;
         for (int i = 0; i < in.length; i++) {
             if ((in[i] >= 'A' && in[i] <= 'Z')) {
@@ -25,21 +27,28 @@ public class Soundex {
             cleanIn[i] = in[i];
         }
 
+        /*System.out.println(cleanIn);
+        System.out.println("---");*/
+
         return cleanIn;
     }
 
     public char[] encode(){
-        if(IN.length == 0) OUT = new char[0];
+        if(IN.length == 0) {OUT = new char[0];
+            return OUT;}
 
         OUT[0] = IN[0];
         int index = 1;
-        char current = getMapping(IN[1]), last = getMapping(IN[0]);
+        char current = getMapping(IN[0]), last = getMapping(IN[0]);
 
-        for (int i = 0; i < IN.length && i < MAX_CODE_LENGTH; i++, last = current) {
+        for (int i = 1; i < IN.length && index < MAX_CODE_LENGTH; i++, last = current) {
             current = getMapping(IN[i]);
             if (current != last && current != '0') {
                 OUT[index++] = current;
             }
+        }
+        while (index < MAX_CODE_LENGTH) {
+            OUT[index++] = '0';
         }
         return OUT;
     }
