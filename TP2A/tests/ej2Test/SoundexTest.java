@@ -60,4 +60,15 @@ public class SoundexTest {
         assertEquals(new Soundex("Robert").toString(), new Soundex("Rupert").toString());
         assertEquals(new Soundex("Smith").toString(), new Soundex("Smyth").toString());
     }
+
+    @Test
+    public void testSimilarity() {
+        assertEquals(1.0, Soundex.similarity("Robert", "Rupert"));
+        assertEquals(1.0, Soundex.similarity("Smith", "Smyth"));
+        assertEquals(0.5, Soundex.similarity("Smith", "Jones"));
+        assertEquals(0.25, Soundex.similarity("Smith", "Brown"));
+        assertEquals(0.00, Soundex.similarity("Smith", "Williams"));
+        assertEquals(0.25, Soundex.similarity("Smith", "Martinez"));
+    }
+
 }

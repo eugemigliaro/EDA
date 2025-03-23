@@ -75,4 +75,16 @@ public class Soundex {
     public String toString() {
         return new String(OUT);
     }
+
+    public static double similarity(String s1, String s2) {
+        Soundex soundex1 = new Soundex(s1);
+        Soundex soundex2 = new Soundex(s2);
+        char[] s1Code = soundex1.encode();
+        char[] s2Code = soundex2.encode();
+        int count = 0;
+        for (int i = 0; i < s1Code.length; i++) {
+            if (s1Code[i] == s2Code[i]) count++;
+        }
+        return (double) count / MAX_CODE_LENGTH;
+    }
 }
