@@ -1,5 +1,7 @@
 package ej2;
 
+import java.util.ArrayList;
+
 public class KMP{
     public static int[] nextComputation(char[] query){
         int[] next = new int[query.length];
@@ -36,6 +38,27 @@ public class KMP{
             }
         }
 
+        return ans;
+    }
+
+    public static ArrayList<Integer> findAll(char[] query, char[] target){
+        ArrayList<Integer> ans = new ArrayList<>();
+        int[] next = nextComputation(query);
+        int pquery = 0, ptarget = 0;
+        while(pquery < query.length && ptarget < target.length){
+            if(query[pquery] == target[ptarget]){
+                pquery++;
+                ptarget++;
+            } else if(pquery == 0){
+                ptarget++;
+            } else {
+                pquery = next[pquery - 1];
+            }
+            if(pquery == query.length){
+                ans.add(ptarget - pquery);
+                pquery = next[pquery - 1];
+            }
+        }
         return ans;
     }
 }
