@@ -74,6 +74,7 @@ public class IndexWithDuplicates implements IndexService {
         return 0;
     }
 
+    /* Returns the position where the key should be inserted, which is the first position greater than or equal to the key */
     private int getClosestPosition(int key) {
         int low = 0;
         int high = currentSize - 1;
@@ -96,5 +97,35 @@ public class IndexWithDuplicates implements IndexService {
             System.out.print(elements[i] + " ");
         }
         System.out.println("]");
+    }
+
+    @Override
+    public void sortedPrint() {
+        printIndex();
+    }
+
+    @Override
+    public int getMax(){
+        return elements[currentSize - 1];
+    }
+
+    @Override
+    public int getMin(){
+        return elements[0];
+    }
+
+    public int[] range(int leftKey, int rightKey, boolean leftIncluded, boolean rightIncluded) {
+        int leftPos = leftIncluded ? getClosestPosition(leftKey - 1) : getClosestPosition(leftKey);
+        int rightPos = rightIncluded ? getClosestPosition(rightKey) - 1 : getClosestPosition(rightKey - 1) - 1;
+
+        if(leftPos > rightPos){
+            return new int[0];
+        }
+        int[] range = new int[rightPos - leftPos + 1];
+        for (int i = 0; i < range.length; i++) {
+            range[i] = elements[leftPos + i];
+        }
+
+        return range;
     }
 }

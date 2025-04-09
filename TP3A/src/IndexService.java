@@ -17,24 +17,22 @@ public interface IndexService {
       	// devuelve la cantidad de apariciones de la clave especificada
 	int occurrences(int key);
 	
-	
-	
 	// devuelve un nuevo arreglo ordenado con los elementos que pertenecen al intervalo dado por 
 	// leftkey y rightkey.  Si el mismo es abierto/cerrado depende de las variables leftIncluded 
 	// y rightIncluded. True indica que es cerrado. 
 	// Si no hay matching devuelve arreglo de length 0
-//	 int[] range(int leftKey, int rightKey, boolean leftIncluded, boolean rightIncluded);
+	 int[] range(int leftKey, int rightKey, boolean leftIncluded, boolean rightIncluded);
 
 
 	// imprime el contenido del �ndice ordenado por su key.	
-//	void sortedPrint();
+	void sortedPrint();
 
 
 	// devuelve el m�ximo elemento del �ndice. Lanza RuntimeException si no hay elementos
-//	int getMax();
+	int getMax();
 		
 	// devuelve el m�nimo elemento del �ndice. Lanza RuntimeException si no hay elementos
-//	int getMin();
+	int getMin();
 	
 	
 }

@@ -54,4 +54,22 @@ public class IndexWithDuplicatesTest {
         assertEquals(3, index.occurrences(4));
         assertEquals(0, index.occurrences(5));
     }
+
+
+    @Test
+    public void testRange() {
+        index.insert(1);
+        index.insert(2);
+        index.insert(3);
+        index.insert(3);
+        index.insert(5);
+        int[] result = index.range(2, 4, true, true);
+        assertArrayEquals(new int[]{2, 3, 3}, result);
+        result = index.range(2, 4, false, true);
+        assertArrayEquals(new int[]{3, 3}, result);
+        result = index.range(2, 4, true, false);
+        assertArrayEquals(new int[]{2, 3, 3}, result);
+        result = index.range(2, 4, false, false);
+        assertArrayEquals(new int[]{3, 3}, result);
+    }
 }
