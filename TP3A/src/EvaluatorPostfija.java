@@ -22,7 +22,7 @@ public class EvaluatorPostfija {
         while(scannerLine.hasNext()) {
 
             String token = scannerLine.next();
-            if (!token.matches("((-)?[0-9]+(.[0-9]+)?|\\+|-|\\*|/)") ) {
+            if (!isNumber(token) && !isOperator(token)) {
                 System.out.println("invalid " + token);
                 valid = false;
             }
@@ -42,7 +42,7 @@ public class EvaluatorPostfija {
 
         while(scannerLine.hasNext()){
             String token = scannerLine.next();
-            if (token.matches("((-)?[0-9]+)(.[0-9]+)?")) {
+            if (isNumber(token)) {
                 auxi.push(Double.valueOf(token));
             } else {
                 Double b = auxi.pop();
@@ -60,6 +60,9 @@ public class EvaluatorPostfija {
                     case "/":
                         auxi.push(a / b);
                         break;
+                    case "^":
+                        auxi.push(Math.pow(a, b));
+                        break;
                     default:
                         break;
                 }
@@ -73,41 +76,26 @@ public class EvaluatorPostfija {
         String postfija = "";
         Stack<String> stack = new Stack<>();
 
-        Map<String, Map<String, Boolean>> precedencia = new HashMap<>();
-        precedencia.put("+", new HashMap<>());
-        precedencia.put("-", new HashMap<>());
-        precedencia.put("*", new HashMap<>());
-        precedencia.put("/", new HashMap<>());
-
-        precedencia.get("+").put("+", true);
-        precedencia.get("+").put("-", true);
-        precedencia.get("+").put("*", false);
-        precedencia.get("+").put("/", false);
-
-        precedencia.get("-").put("+", true);
-        precedencia.get("-").put("-", true);
-        precedencia.get("-").put("*", false);
-        precedencia.get("-").put("/", false);
-
-        precedencia.get("*").put("+", true);
-        precedencia.get("*").put("-", true);
-        precedencia.get("*").put("*", true);
-        precedencia.get("*").put("/", true);
-
-        precedencia.get("/").put("+", true);
-        precedencia.get("/").put("-", true);
-        precedencia.get("/").put("*", true);
-        precedencia.get("/").put("/", true);
-
         while (scannerLine.hasNext()) {
             String token = scannerLine.next();
-            if (token.matches("((-)?[0-9]+)(.[0-9]+)?")) {
+            if (isNumber(token)) {
                 postfija += token + " ";
-            } else {
-                while (!stack.isEmpty() && precedencia.get(stack.peek()).get(token)) {
-                    postfija += stack.pop() + " ";
+            } else if (isOperator(token)) {
+                while (!(stack.isEmpty()) && shouldPop(stack.peek(), token)) {
+                    if(!stack.peek().equals("(")){
+                        postfija += stack.pop() + " ";
+                    }
                 }
-                stack.push(token);
+
+                if(token.equals(")")){
+                    if(stack.peek().equals("(")){
+                        stack.pop();
+                    }else{
+                        throw new RuntimeException("Invalid expression");
+                    }
+                }else{
+                    stack.push(token);
+                }
             }
         }
         while (!stack.isEmpty()) {
@@ -116,12 +104,38 @@ public class EvaluatorPostfija {
         return postfija;
     }
 
+    private boolean shouldPop(String op1, String op2) {
+        Map<String, Integer> precedencia = new HashMap<>(){
+            {
+                put("+", 1);
+                put("-", 1);
+                put("*", 2);
+                put("/", 2);
+                put("^", 3);
+                put("(", -1);
+                put(")", 0);
+            }
+        };
 
+        if(!precedencia.containsKey(op1) || !precedencia.containsKey(op2)) return false;
+
+        if(op1.equals("^") && op2.equals("^")) return false;
+
+        if(op2.equals("(")) return false;
+
+        return precedencia.get(op1) >= precedencia.get(op2);
+    }
+    
+    private boolean isNumber(String token) {
+        return token.matches("((-)?[0-9]+)(.[0-9]+)?");
+    }
+    
+    private boolean isOperator(String token) {
+        return token.matches("[+\\-*/^()]");
+    }
 
     public static void main(String[] args) {
         Double rta = new EvaluatorPostfija().evaluate();
         System.out.println("El resultado es: " + rta);
     }
-
-
 }
