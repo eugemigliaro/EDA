@@ -106,11 +106,40 @@ public class DataAnalysis {
 		System.out.println("Promedio de poluciones: " + promedio);
 
 		// Imprimir ascendentemente la info disponible, pero ordenada por polución.
-		IdxRecord<Double, Long>[] polucionesAscendente = indexPolucion.range(new IdxRecord<>(0.0, 0L), new IdxRecord<>(20.0, 0L), false, true);
+		IdxRecord<Double, Long>[] polucionesAscendente = indexPolucion.range(new IdxRecord<>(indexPolucion.getMin().getKey(), 0L), new IdxRecord<>(indexPolucion.getMax().getKey(), 0L), true, true);
 		for (IdxRecord<Double, Long> idxRecord : polucionesAscendente) {
 			System.out.println(idxRecord.getRowID() + " - " + idxRecord.getKey() + " - " + datos.get(idxRecord.getRowID()));
-		}//todo: terminar mañana el resto de las queries
+		}
+
+		// Averiguar si existió una polución cuyo valor fuera 2.8
+		IdxRecord<Double, Long> idxRecord = new IdxRecord<>(2.8, 0L);
+		System.out.println("Existen poluciones de 2.8? " + indexPolucion.search(idxRecord));
+
+		// Buscar el valor numérico de la mínima polución registrada.
+		System.out.println("Minima polucion: " + indexPolucion.getMin().getKey());
+
+		// Buscar la info disponible en que se dio la mínima polución registrada.
+		System.out.println("Info de la minima polucion: " + datos.get(indexPolucion.getMin().getRowID()));
+
+		// Conocer qué valores numéricos de polución se registraron entre [3.65, 3.84]
+		IdxRecord<Double, Long>[] polucionesEntre = indexPolucion.range(new IdxRecord<>(3.65, 0L), new IdxRecord<>(3.84, 0L), true, true);
+		System.out.println("Poluciones en [3.65, 3.84]: ");
+		for (IdxRecord<Double, Long> idxRecord2 : polucionesEntre) {
+			System.out.println(idxRecord2.getKey());
+		}
+
+		// Conocer la info disponible en la que la polución registrada fue entre [3.65, 3.84)
+		IdxRecord<Double, Long>[] polucionesEntre2 = indexPolucion.range(new IdxRecord<>(3.65, 0L), new IdxRecord<>(3.84, 0L), true, false);
+		System.out.println("Info de poluciones en [3.65, 3.84): ");
+		for (IdxRecord<Double, Long> idxRecord2 : polucionesEntre2) {
+			System.out.println(idxRecord2.getRowID() + " - " + idxRecord2.getKey() + " - " + datos.get(idxRecord2.getRowID()));
+		}
+
+		// Conocer la info disponible en la que la polución registrada fue [10.5, 12]
+		IdxRecord<Double, Long>[] polucionesEntre3 = indexPolucion.range(new IdxRecord<>(10.5, 0L), new IdxRecord<>(12d, 0L), true, true);
+		System.out.println("Info de poluciones en [10.5, 12]: ");
+		for (IdxRecord<Double, Long> idxRecord2 : polucionesEntre3) {
+			System.out.println(idxRecord2.getRowID() + " - " + idxRecord2.getKey() + " - " + datos.get(idxRecord2.getRowID()));
+		}
     }
-    
- 	    
 }
