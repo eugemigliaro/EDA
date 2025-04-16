@@ -1,7 +1,7 @@
 package SortedLinkedList;
 
 // lista simplemente encadenada
-public interface SortedListService<T extends Comparable<? super T>> {
+public interface SortedListService<T extends Comparable<? super T>> extends Iterable<T>{
     // no acepta nulls=> lanza exception
     // ignora repetidos y devuelve false en ese caso
     // si no existia devuelve true y lo inserta ordenadamente

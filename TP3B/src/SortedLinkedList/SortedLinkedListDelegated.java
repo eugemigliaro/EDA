@@ -1,5 +1,7 @@
 package SortedLinkedList;
 
+import java.util.Iterator;
+
 public class SortedLinkedListDelegated<T extends Comparable<T>> implements SortedListService<T> {
     private Node root;
 
@@ -59,6 +61,25 @@ public class SortedLinkedListDelegated<T extends Comparable<T>> implements Sorte
             root.dump();
 
         root = null;
+    }
+
+    @Override
+    public Iterator<T> iterator(){
+        return new Iterator<T>() {
+            private Node current = root;
+
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public T next(){
+                T data = current.data;
+                current = current.next;
+                return data;
+            }
+        };
     }
 
     private class Node {
