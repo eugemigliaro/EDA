@@ -1,6 +1,7 @@
 package SortedLinkedList;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class SortedLinkedListDelegated<T extends Comparable<T>> implements SortedListService<T> {
     private Node root;
@@ -75,6 +76,9 @@ public class SortedLinkedListDelegated<T extends Comparable<T>> implements Sorte
 
             @Override
             public T next(){
+                if(!hasNext()){
+                    throw new NoSuchElementException();
+                }
                 T data = current.data;
                 current = current.next;
                 return data;
