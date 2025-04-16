@@ -119,6 +119,8 @@ public class SortedLinkedListRecursive<T extends Comparable<? super T>> implemen
     public Iterator<T> iterator(){
         return new Iterator<T>() {
             private Node current = root;
+            private boolean canRemove = false;
+            private Node prev = null;
 
             @Override
             public boolean hasNext() {
@@ -131,8 +133,27 @@ public class SortedLinkedListRecursive<T extends Comparable<? super T>> implemen
                     throw new NoSuchElementException();
                 }
                 T data = current.data;
+                prev = current;
                 current = current.next;
+
+                canRemove = true;
+
                 return data;
+            }
+
+
+            public void remove(){
+                if(!canRemove){
+                    throw new IllegalStateException();
+                }
+
+                if(prev == null){
+                    root = current.next;
+                }else{
+                    prev.next = current.next;
+                }
+                current = current.next;
+                canRemove = false;
             }
         };
     }

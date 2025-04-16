@@ -1,5 +1,8 @@
 package SortedLinkedList;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 // lista simplemente encadenada, no acepta repetidos (false e ignora) ni nulls (exception)
 public class SortedLinkedListIterative<T extends Comparable<? super T>> implements SortedListService<T> {
     private Node root;
@@ -102,6 +105,50 @@ public class SortedLinkedListIterative<T extends Comparable<? super T>> implemen
             current = current.next;
         }
     }
+
+    @Override
+    public Iterator<T> iterator(){
+        return new Iterator<T>() {
+            private Node current = root;
+            private boolean canRemove = false;
+            private Node prev = null;
+
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public T next(){
+                if(!hasNext()){
+                    throw new NoSuchElementException();
+                }
+                T data = current.data;
+                prev = current;
+                current = current.next;
+
+                canRemove = true;
+
+                return data;
+            }
+
+
+            public void remove(){
+                if(!canRemove){
+                    throw new IllegalStateException();
+                }
+
+                if(prev == null){
+                    root = current.next;
+                }else{
+                    prev.next = current.next;
+                }
+                current = current.next;
+                canRemove = false;
+            }
+        };
+    }
+
     // clase auxiliary
     private final class Node {
         private T data;
