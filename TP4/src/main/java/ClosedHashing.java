@@ -15,7 +15,7 @@ public class ClosedHashing<K, V> implements IndexParametricService<K, V> {
         if (mappingFn == null)
             throw new RuntimeException("fn not provided");
 
-        prehash= mappingFn;
+        prehash = mappingFn;
     }
 
     // ajuste al tamaño de la tabla
