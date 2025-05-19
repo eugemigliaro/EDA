@@ -2,7 +2,9 @@ package b;
 
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -87,7 +89,8 @@ public class BinaryTree implements BinaryTreeService {
     @Override
     public void preorder() {
         System.out.println("Preorder: ");
-        root.preorder();
+        if(root != null)
+            root.preorder();
         System.out.println("\n");
     }
 
@@ -96,9 +99,45 @@ public class BinaryTree implements BinaryTreeService {
     @Override
     public void postorder() {
         System.out.println("Postorder: ");
-        root.postorder();
+        if(root != null)
+            root.postorder();
         System.out.println("\n");
     }
+
+    public void toFile(String fileName) {
+        //ESTO NO FUNCIONA BIEN, NO ES REVERSIBLE, LO SOLUCIONO USANDO UN TOKENCOUNT, NO ME QUEDA OTRA PORQUE SINO NO TERMINA
+        try (PrintWriter writer = new PrintWriter(fileName)) {
+            Queue<Node> cola = new LinkedList<>();
+            cola.offer(root);
+
+            int height = getHeightRec();
+            int currentLvl = 0;
+
+            while (currentLvl <= height){
+                int levelSize = cola.size();
+
+                for(int i = 0; i < levelSize; i++) {
+                    Node node = cola.poll();
+                    if(node != null){
+                        writer.print(node.data + " ");
+                        cola.offer(node.left);
+                        cola.offer(node.right);
+                    }else{
+                        writer.print("? ");
+                        cola.offer(null);
+                        cola.offer(null);
+                    }
+                }
+
+                currentLvl++;
+            }
+
+            writer.println();
+        } catch (IOException e) {
+            throw new RuntimeException("Error escribiendo archivo: " + e.getMessage());
+        }
+    }
+
 
     public void printHierarchy(){
         System.out.println("Hierarchy: ");
@@ -128,6 +167,45 @@ public class BinaryTree implements BinaryTreeService {
         }
         printHierarchy(node.left, prefix + "    ");
         printHierarchy(node.right, prefix + "    ");
+    }
+
+    public int getHeightIt(){
+        if(root == null){
+            return -1;
+        }
+
+        int height = -1;
+        Queue<Node> q = new LinkedList<>();
+        q.add(root);
+        while(!q.isEmpty()){
+            int lvlSize = q.size();
+            for(int i = 0; i < lvlSize; i++){
+                Node node = q.remove();
+                if(node.left != null){
+                    q.add(node.left);
+                }
+                if(node.right != null){
+                    q.add(node.right);
+                }
+            }
+            height++;
+        }
+        return height;
+    }
+
+    public int getHeightRec(){
+        return getHeightRec(root);
+    }
+
+    private int getHeightRec(Node node){
+        if(node == null){
+            return -1;
+        }
+
+        int leftHeight = getHeightRec(node.left);
+        int rightHeight = getHeightRec(node.right);
+
+        return 1 + (leftHeight > rightHeight ? leftHeight : rightHeight);
     }
 
     // hasta el get() no se evalua
@@ -207,10 +285,13 @@ public class BinaryTree implements BinaryTreeService {
 
 
     public static void main(String[] args) throws FileNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-        BinaryTreeService rta = new BinaryTree("data1");
+        BinaryTree rta = new BinaryTree("data0_1");
         rta.preorder();
         rta.postorder();
         rta.printHierarchy();
+        //rta.toFile("newFile");
+        System.out.println(rta.getHeightIt());
+        System.out.println(rta.getHeightRec());
     }
 
 }
