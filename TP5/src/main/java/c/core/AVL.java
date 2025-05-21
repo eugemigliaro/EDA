@@ -2,16 +2,70 @@ package c.core;
 
 import java.util.*;
 
-public class BST<T extends Comparable<? super T>> implements BSTreeInterface<T> {
-
+public class AVL<T extends Comparable<? super T>> implements BSTreeInterface<T> {
     private Node<T> root;
 
     private Traversal traversal = Traversal.BYLEVELS;
 
     @Override
     public void insert(T value) {
-        if (root == null) root = new Node<>(value);
-        else root.insert(value);
+        if(value == null){
+            throw new IllegalArgumentException();
+        }
+
+        root = insert(value, root);
+    }
+
+    private Node<T> insert(T value, Node<T> current){
+        if(current == null){
+            return new Node<>(value);
+        }
+        int cmp = value.compareTo(current.getData());
+        if(cmp <= 0){
+            current.setLeft(insert(value, current.getLeft()));
+        }else{
+            current.setRight(insert(value, current.getRight()));
+        }
+
+        current.updateHeight();
+
+        return balanceTree(current);
+    }
+
+    private Node<T> balanceTree(Node<T> current) {
+        int balance = getBalance(current);
+        if(balance > 1){
+            if(getBalance(current.getLeft()) < 0){
+                current.setLeft(leftRotate(current.getLeft()));
+            }
+            return rightRotate(current);
+        }
+        if(balance < -1){
+            if(getBalance(current.getRight()) > 0){
+                current.setRight(rightRotate(current.getRight()));
+            }
+            return leftRotate(current);
+        }
+
+        return current;
+    }
+
+    private Node<T> rightRotate(Node<T> node){
+        Node<T> aux = node.getLeft();
+        node.setLeft(aux.getRight());
+        aux.setRight(node);
+        node.updateHeight();
+        aux.updateHeight();
+        return aux;
+    }
+
+    private Node<T> leftRotate(Node<T> node){
+        Node<T> aux = node.getRight();
+        node.setRight(aux.getLeft());
+        aux.setLeft(node);
+        node.updateHeight();
+        aux.updateHeight();
+        return aux;
     }
 
     public void insertIt(T value) {
@@ -52,7 +106,12 @@ public class BST<T extends Comparable<? super T>> implements BSTreeInterface<T> 
 
     private int getHeight(Node<T> node) {
         if (node == null) return -1;
-        return 1 + Math.max(getHeight(node.getLeft()), getHeight(node.getRight()));
+        return node.getHeight();
+    }
+
+    private int getBalance(Node<T> node) {
+        if (node == null) return 0;
+        return getHeight(node.getLeft()) - getHeight(node.getRight());
     }
 
     @Override
@@ -182,7 +241,7 @@ public class BST<T extends Comparable<? super T>> implements BSTreeInterface<T> 
             node.setLeft(delete(node.getLeft(), predecessor.getData()));
         }
 
-        return node;
+        return balanceTree(node);
     }
 
     private Node<T> findMax(Node<T> node) {

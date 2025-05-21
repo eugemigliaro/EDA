@@ -20,4 +20,7 @@ public interface BSTreeInterface<T extends Comparable<? super T>> extends Iterab
     }
 
     void setTraversal(Traversal traversal);
+    int getOcurrences(T myData);
+    T valueAt(int index);
+    T getCommonNode(T myData1, T myData2);
 }

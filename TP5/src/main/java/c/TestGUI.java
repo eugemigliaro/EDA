@@ -1,5 +1,6 @@
 package c;
 
+import c.core.AVL;
 import c.core.BST;
 
 // bajar el paquete nativo  
@@ -10,6 +11,7 @@ import c.core.BST;
 
 
 import c.controller.GraphicsTree;
+import c.core.BSTreeInterface;
 import c.core.Person;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -31,17 +33,23 @@ public class TestGUI extends Application {
 		StackPane root = new StackPane();
 		Scene scene = new Scene(root, 1300, 700);
 
-		BST<Integer> myTree = createModel();
+		/*BST<Integer> myTree = createModel();
 		GraphicsTree<Integer> c = new GraphicsTree<>(myTree);
 		c.widthProperty().bind(scene.widthProperty());
 		c.heightProperty().bind(scene.heightProperty());
-		root.getChildren().add(c);
+		root.getChildren().add(c);*/
 
 		/*BST<Person> myTree2 = createModel2();
 		GraphicsTree<Person> c2 = new GraphicsTree<>(myTree2);
 		c2.widthProperty().bind(scene.widthProperty());
 		c2.heightProperty().bind(scene.heightProperty());
 		root.getChildren().add(c2);*/
+
+		AVL<Integer> myTree = createModel3();
+		GraphicsTree<Integer> c = new GraphicsTree<>(myTree);
+		c.widthProperty().bind(scene.widthProperty());
+		c.heightProperty().bind(scene.heightProperty());
+		root.getChildren().add(c);
 
 		stage.setScene(scene);
 		stage.show();
@@ -83,6 +91,62 @@ public class TestGUI extends Application {
 			System.out.print(value + " ");
 		}
 		System.out.println();
+
+		System.out.println("elemento en el indice 3 de menor a mayor: " + myTree.valueAt(3));
+		System.out.println("elemento en el indice 4 de menor a mayor: " + myTree.valueAt(4));
+		System.out.println("elemento en el indice 5 de menor a mayor: " + myTree.valueAt(5));
+		System.out.println("elemento en el indice 6 de menor a mayor: " + myTree.valueAt(6));
+
+		System.out.println("El ancestro común entre 40 y 60 es: " + myTree.getCommonNode(40, 60));
+		System.out.println("El ancestro común entre 80 y 40 es: " + myTree.getCommonNode(40, 80));
+		System.out.println("El ancestro común entre 40 y 40 es: " + myTree.getCommonNode(40, 40));
+		System.out.println("El ancestro común entre 10 y 10 es: " + myTree.getCommonNode(10, 10));
+		System.out.println("El ancestro común entre 10 y 44 es: " + myTree.getCommonNode(10, 44));
+
+		return myTree;
+	}
+
+	private AVL<Integer> createModel3(){
+		AVL<Integer> myTree = new AVL<>();
+		for(int i = 0; i < 200; i++){
+			myTree.insert(i);
+		}
+
+		for (Integer element : myTree) {
+			System.out.print(element + " ");
+		}
+		System.out.println();
+
+		myTree.setTraversal(BST.Traversal.INORDER);
+		for (Integer item : myTree) {
+			System.out.print(item + " ");
+		}
+		System.out.println();
+
+		myTree.setTraversal(BST.Traversal.PREORDER);
+		for (Integer integer : myTree) {
+			System.out.print(integer + " ");
+		}
+		System.out.println();
+
+		myTree.setTraversal(BST.Traversal.POSTORDER);
+		for (Integer value : myTree) {
+			System.out.print(value + " ");
+		}
+		System.out.println();
+
+		System.out.println("altura del arbol: " + myTree.getHeight());
+
+		System.out.println("elemento en el indice 3 de menor a mayor: " + myTree.valueAt(3));
+		System.out.println("elemento en el indice 4 de menor a mayor: " + myTree.valueAt(4));
+		System.out.println("elemento en el indice 5 de menor a mayor: " + myTree.valueAt(5));
+		System.out.println("elemento en el indice 6 de menor a mayor: " + myTree.valueAt(6));
+
+		System.out.println("El ancestro común entre 40 y 60 es: " + myTree.getCommonNode(40, 60));
+		System.out.println("El ancestro común entre 80 y 40 es: " + myTree.getCommonNode(40, 80));
+		System.out.println("El ancestro común entre 40 y 40 es: " + myTree.getCommonNode(40, 40));
+		System.out.println("El ancestro común entre 10 y 10 es: " + myTree.getCommonNode(10, 10));
+		System.out.println("El ancestro común entre 10 y 44 es: " + myTree.getCommonNode(10, 44));
 
 		return myTree;
 	}

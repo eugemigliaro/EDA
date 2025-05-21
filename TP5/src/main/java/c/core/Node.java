@@ -3,9 +3,11 @@ package c.core;
 public class Node<T extends Comparable<? super T>> implements NodeTreeInterface<T> {
     private T data;
     private Node<T> left, right;
+    private int height = -1;
 
     public Node(T data) {
         this.data = data;
+        this.height = 0;
     }
 
     public void insert(T value) {
@@ -45,5 +47,19 @@ public class Node<T extends Comparable<? super T>> implements NodeTreeInterface<
 
     public void setRight(Node<T> right) {
         this.right = right;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public void updateHeight(){
+        int leftHeight = left == null ? -1 : left.getHeight();
+        int rightHeight = right == null ? -1 : right.getHeight();
+        height = Math.max(leftHeight, rightHeight)+ 1;
     }
 }
